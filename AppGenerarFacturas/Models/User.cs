@@ -14,6 +14,7 @@ namespace AppGenerarFacturas.Models
         public string Email { get; set; } = null!;
         [Required]
         public string Password { get; set; } = null!;
+        public ICollection<Company> Companies { get; set; } = new List<Company>();
 
 
 

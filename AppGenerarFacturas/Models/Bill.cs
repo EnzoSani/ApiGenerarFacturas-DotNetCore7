@@ -10,7 +10,9 @@ namespace AppGenerarFacturas.Models
         public DateTime Time { get;set; }
         [Required]
         public decimal Total { get; set; }
-        
+        public ICollection<InvoiseLine> InvoiseLines { get; set; } = new List<InvoiseLine>();
+        public Company Companies { get; set; }
+
 
     }
 }

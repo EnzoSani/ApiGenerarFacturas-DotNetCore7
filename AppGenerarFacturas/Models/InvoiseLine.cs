@@ -12,5 +12,6 @@ namespace AppGenerarFacturas.Models
         public int Amount { get; set; }
         [Required]
         public decimal Price { get; set; }
+        public Bill Bills { get; set; }
     }
 }

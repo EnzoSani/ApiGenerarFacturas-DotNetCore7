@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AppGenerarFacturas.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppGenerarFacturas.DataAccess
 {
@@ -8,5 +9,9 @@ namespace AppGenerarFacturas.DataAccess
         {
 
         }
+        DbSet<User> Users { get; set; }
+        DbSet<Company> Companies { get; set; }
+        DbSet<Bill> Bills { get; set; }
+        DbSet<InvoiseLine> InvoiseLines { get; set;}
     }  
 }

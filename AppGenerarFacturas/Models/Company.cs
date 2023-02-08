@@ -12,6 +12,8 @@ namespace AppGenerarFacturas.Models
         public string Direccion { get; set; } = null!;
         [Required]
         public int TelephoneNumber { get; set; }
+        public User Users { get; set; }
+        public ICollection<Bill> Bills { get; set; } = new List<Bill>();
 
     }
 }
