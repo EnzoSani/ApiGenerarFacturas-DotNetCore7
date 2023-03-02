@@ -9,9 +9,9 @@ namespace AppGenerarFacturas.DataAccess
         {
 
         }
-        DbSet<User> Users { get; set; }
-        DbSet<Company> Companies { get; set; }
-        DbSet<Bill> Bills { get; set; }
-        DbSet<InvoiseLine> InvoiseLines { get; set;}
+        public DbSet<User> Users { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public  DbSet<Bill> Bills { get; set; }
+        public DbSet<InvoiseLine> InvoiseLines { get; set;}
     }  
 }

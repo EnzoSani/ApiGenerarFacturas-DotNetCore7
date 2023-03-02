@@ -34,16 +34,22 @@ namespace AppGenerarFacturas.Controllers
                     Token = JwtHelpers.GetTokenKey(new UserTokens()
                     {
                         UserName = User.Name,
-                        EmailId = User.EmailId,
+                        EmailId = User.Email,
+                        Id = User.Id,
+                        GuidId = Guid.NewGuid(),
 
-
-                    });
+                    }, _jwtSettings);
                 }
+                else
+                {
+                    return BadRequest("Wrong Password");
+                }
+                return Ok(Token);
             }
-            catch (Exception)
+            catch (Exception Ex)
             {
 
-                throw;
+                throw new Exception("Get Token Error", Ex);
             }
         }
     }
