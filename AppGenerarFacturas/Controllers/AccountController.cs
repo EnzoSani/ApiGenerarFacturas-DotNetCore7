@@ -1,6 +1,9 @@
 ﻿using AppGenerarFacturas.DataAccess;
 using AppGenerarFacturas.Helpers;
 using AppGenerarFacturas.Models;
+using AppGenerarFacturas.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +13,14 @@ namespace AppGenerarFacturas.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {   
+        private readonly IUserService _userService;
         private readonly ApplicationDBContext _dbContext;
         private readonly JwtSettings _jwtSettings;
-        public AccountController(ApplicationDBContext dbContext, JwtSettings jwtSettings)
+        public AccountController(ApplicationDBContext dbContext, JwtSettings jwtSettings, IUserService userService)
         {
             _dbContext = dbContext;
             _jwtSettings = jwtSettings;
+            _userService = userService;
         }
 
 
@@ -51,6 +56,15 @@ namespace AppGenerarFacturas.Controllers
 
                 throw new Exception("Get Token Error", Ex);
             }
+        }
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+
+        public IActionResult GetUserList()
+        {
+            var userList = _userService.GetUserList();
+            return Ok(userList);
         }
     }
 }
