@@ -1,6 +1,7 @@
 // 1 Using to work with Entity Framwork
 using Microsoft.EntityFrameworkCore;
 using AppGenerarFacturas.DataAccess;
+using AppGenerarFacturas;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +12,22 @@ var conectionString = builder.Configuration.GetConnectionString(CONNECTIONNAME);
 // 3 Add Context to services of builder
 builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(conectionString));
 
+// 7 Add Service of JWT Autorization 
+builder.Services.AddJwtTokenServices(builder.Configuration);
+
+
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+
+
+
+
+
+
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
