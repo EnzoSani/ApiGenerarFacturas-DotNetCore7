@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using AppGenerarFacturas.DataAccess;
 using AppGenerarFacturas;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,16 +22,47 @@ builder.Services.AddJwtTokenServices(builder.Configuration);
 builder.Services.AddControllers();
 
 
+// 8 Add authorization 
 
-
-
-
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("UseronlyPolicy", policy => policy.RequireClaim("UserOnly", "User1"));
+});
 
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// 9 Config Swager to take care of athorization of Jwt
+builder.Services.AddSwaggerGen(options =>
+{
+    // We define the segurity for Authorization
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "jWT Authorization using Bearer Scheme"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                  Reference = new OpenApiReference
+                  {
+                      Type = ReferenceType.SecurityScheme,
+                      Id = "Bearer"
+                  }
+            },
+            new string[] {}
+        }
+    });
+} );
 
 var app = builder.Build();
 
