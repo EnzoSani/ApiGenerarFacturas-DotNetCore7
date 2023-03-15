@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AppGenerarFacturas.DataAccess;
 using AppGenerarFacturas.Models;
+using AppGenerarFacturas.DTOS;
+using AutoMapper;
 
 namespace AppGenerarFacturas.Controllers
 {
@@ -15,10 +17,12 @@ namespace AppGenerarFacturas.Controllers
     public class UsersController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
+        private readonly IMapper _mapper;
 
-        public UsersController(ApplicationDBContext context)
+        public UsersController(ApplicationDBContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Users
@@ -84,12 +88,13 @@ namespace AppGenerarFacturas.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<User>> PostUser(UserCreacionDTO userCreacion)
         {
           if (_context.Users == null)
           {
               return Problem("Entity set 'ApplicationDBContext.Users'  is null.");
           }
+             var user = _mapper.Map<User>(userCreacion);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
