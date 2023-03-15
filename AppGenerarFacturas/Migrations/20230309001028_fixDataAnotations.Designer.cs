@@ -4,6 +4,7 @@ using AppGenerarFacturas.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppGenerarFacturas.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230309001028_fixDataAnotations")]
+    partial class fixDataAnotations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +33,7 @@ namespace AppGenerarFacturas.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CompanyId")
+                    b.Property<int>("CompaniesId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Time")
@@ -41,7 +44,7 @@ namespace AppGenerarFacturas.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("CompaniesId");
 
                     b.ToTable("Bills");
                 });
@@ -65,12 +68,12 @@ namespace AppGenerarFacturas.Migrations
                     b.Property<int>("TelephoneNumber")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("UsersId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UsersId");
 
                     b.ToTable("Companies");
                 });
@@ -86,7 +89,7 @@ namespace AppGenerarFacturas.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<int>("BillId")
+                    b.Property<int>("BillsId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -99,7 +102,7 @@ namespace AppGenerarFacturas.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BillId");
+                    b.HasIndex("BillsId");
 
                     b.ToTable("InvoiseLines");
                 });
@@ -135,35 +138,35 @@ namespace AppGenerarFacturas.Migrations
 
             modelBuilder.Entity("AppGenerarFacturas.Models.Bill", b =>
                 {
-                    b.HasOne("AppGenerarFacturas.Models.Company", "Company")
+                    b.HasOne("AppGenerarFacturas.Models.Company", "Companies")
                         .WithMany("Bills")
-                        .HasForeignKey("CompanyId")
+                        .HasForeignKey("CompaniesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Company");
+                    b.Navigation("Companies");
                 });
 
             modelBuilder.Entity("AppGenerarFacturas.Models.Company", b =>
                 {
-                    b.HasOne("AppGenerarFacturas.Models.User", "User")
+                    b.HasOne("AppGenerarFacturas.Models.User", "Users")
                         .WithMany("Companies")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("AppGenerarFacturas.Models.InvoiseLine", b =>
                 {
-                    b.HasOne("AppGenerarFacturas.Models.Bill", "Bill")
+                    b.HasOne("AppGenerarFacturas.Models.Bill", "Bills")
                         .WithMany("InvoiseLines")
-                        .HasForeignKey("BillId")
+                        .HasForeignKey("BillsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Bill");
+                    b.Navigation("Bills");
                 });
 
             modelBuilder.Entity("AppGenerarFacturas.Models.Bill", b =>
