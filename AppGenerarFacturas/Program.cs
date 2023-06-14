@@ -4,6 +4,8 @@ using AppGenerarFacturas.DataAccess;
 using AppGenerarFacturas;
 using Microsoft.OpenApi.Models;
 using AppGenerarFacturas.Services;
+using AppGenerarFacturas.Utilities;
+using JwtWebApiDotNet7.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +16,10 @@ var conectionString = builder.Configuration.GetConnectionString(CONNECTIONNAME);
 // 3 Add Context to services of builder
 builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(conectionString));
 
-// 7 Add Service of JWT Autorization 
-builder.Services.AddJwtTokenServices(builder.Configuration);
 
 // 4 Add custom Services ( foolder Services)
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 
 // Add services to the container.
@@ -69,7 +70,7 @@ builder.Services.AddSwaggerGen(//options =>
 //}
 );
 
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 var app = builder.Build();
 
