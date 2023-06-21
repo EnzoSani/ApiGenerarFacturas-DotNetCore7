@@ -1,7 +1,8 @@
 ﻿using AppGenerarFacturas.DTOS;
 using AppGenerarFacturas.Models;
 
-namespace JwtWebApiDotNet7.Services
+
+namespace AppGenerarFacturas.Services
 {
     public interface IAuthService
     {

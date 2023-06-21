@@ -1,11 +1,10 @@
 ﻿using AppGenerarFacturas.DTOS;
-using AppGenerarFacturas.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace JwtWebApiDotNet7.Services
+namespace AppGenerarFacturas.Services
 {
     public class AuthService : IAuthService
     {
@@ -17,26 +16,44 @@ namespace JwtWebApiDotNet7.Services
 
         public async Task<string> CreateToken(UserResponse user)
         {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Name)
-            };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value!));
+            //obtenemos la key de el archivo que configuramos en appsettings.Json
+            var key = _configuration.GetValue<string>("AppSettings:Key");
+            //Transformamos esa key en un array
+            var keyBytes = Encoding.ASCII.GetBytes(key);
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var claims = new ClaimsIdentity();
+            claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Name));
+            claims.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
+            claims.AddClaim(new Claim(ClaimTypes.Role, "User"));
 
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds
+            //Creamos una credencial para nuestro token
+            var credencialesToken = new SigningCredentials(
+                new SymmetricSecurityKey(keyBytes),
+                SecurityAlgorithms.HmacSha256Signature
                 );
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return jwt;
+            //Creamos el detalle de nuestro token
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = claims,
+                Expires = DateTime.UtcNow.AddMinutes(1),
+                SigningCredentials = credencialesToken
+            };
+
+            //Creamos los controladores de Jwt
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenConfig = tokenHandler.CreateToken(tokenDescriptor);
+
+            //Obtenemos el Token
+            string tokenCreado = tokenHandler.WriteToken(tokenConfig);
+
+            //retornamos el Token
+            return tokenCreado;
+
+
 
         }
 
-       
+
     }
 }

@@ -9,6 +9,7 @@ using AppGenerarFacturas.DataAccess;
 using AppGenerarFacturas.Models;
 using AppGenerarFacturas.DTOS;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppGenerarFacturas.Controllers
 {
@@ -26,7 +27,7 @@ namespace AppGenerarFacturas.Controllers
         }
 
         // GET: api/Users
-        [HttpGet]
+        [HttpGet("getUserList"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
           if (_context.Users == null)
