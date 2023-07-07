@@ -1,6 +1,6 @@
 ﻿using AppGenerarFacturas.Models.Custom;
 
-namespace AppGenerarFacturas.Services
+namespace AppGenerarFacturas.Services.contracts
 {
     public interface IAuthorizationService
     {

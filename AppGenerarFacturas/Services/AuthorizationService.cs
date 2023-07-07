@@ -7,6 +7,7 @@ using AppGenerarFacturas.Models.Custom;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using AppGenerarFacturas.DataAccess;
+using AppGenerarFacturas.Services.contracts;
 
 namespace AppGenerarFacturas.Services
 {

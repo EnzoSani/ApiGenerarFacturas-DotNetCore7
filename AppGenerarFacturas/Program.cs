@@ -9,6 +9,7 @@ using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using AppGenerarFacturas.Services.contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,9 @@ builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlSer
 
 // 4 Add custom Services ( foolder Services)
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IInvoiseLineService, InvoiseLineService>();
+builder.Services.AddScoped<IBillService, BillService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 
@@ -48,6 +52,12 @@ builder.Services.AddAuthentication(config =>
         ClockSkew = TimeSpan.Zero
     };
 });
+
+builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
+    policy =>
+    {
+        policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+    }));
 
 // Add services to the container.
 
@@ -80,6 +90,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("NgOrigins");
 
 app.UseHttpsRedirection();
 

@@ -1,4 +1,5 @@
 ﻿using AppGenerarFacturas.DTOS;
+using AppGenerarFacturas.Services.contracts;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -36,7 +37,7 @@ namespace AppGenerarFacturas.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claims,
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(10),
                 SigningCredentials = credencialesToken
             };
 

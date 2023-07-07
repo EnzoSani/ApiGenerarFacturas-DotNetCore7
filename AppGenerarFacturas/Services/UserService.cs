@@ -1,5 +1,6 @@
 ﻿using AppGenerarFacturas.DataAccess;
 using AppGenerarFacturas.Models;
+using AppGenerarFacturas.Services.contracts;
 
 namespace AppGenerarFacturas.Services
 {

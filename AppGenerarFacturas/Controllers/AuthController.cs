@@ -3,9 +3,9 @@ using AppGenerarFacturas.DTOS;
 using AppGenerarFacturas.Models;
 using AutoMapper;
 using Azure.Core;
-using AppGenerarFacturas.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using AppGenerarFacturas.Services.contracts;
 
 namespace AppGenerarFacturas.Controllers
 {
