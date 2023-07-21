@@ -80,7 +80,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+builder.Services.AddAutoMapper(typeof(BillProfile), typeof(AuthProfile));
 
 var app = builder.Build();
 

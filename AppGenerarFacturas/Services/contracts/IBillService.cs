@@ -6,10 +6,10 @@ namespace AppGenerarFacturas.Services.contracts
 {
     public interface IBillService
     {
-        Task<Bill> CreateBill(BillCreationDTO billCreacion);
-        Task<bool> DeleteBill(int id);
-        Task<ActionResult<Bill>> GetBill(int id);
-        Task<ActionResult<IEnumerable<Bill>>> getBills();
-        Task<IActionResult> UpdateBill(int id, Bill updatedBill);
+        Task<Bill> CreateBill(Bill bill);
+        Task DeleteBill(Bill bill);
+        Task<Bill> GetBill(int id);
+        Task<IEnumerable<Bill>> getBills();
+        Task UpdateBill(Bill bill);
     }
 }

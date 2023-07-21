@@ -19,87 +19,55 @@ namespace AppGenerarFacturas.Services
             _mapper = mapper;
         }
 
-        public async Task<ActionResult<IEnumerable<Bill>>> getBills()
+        public async Task<IEnumerable<Bill>> getBills()
         {
-            var bills = await _context.Bills.ToListAsync();
-
-            if (bills == null)
-            {
-                return new NotFoundObjectResult(null);
-            }
+            var bills = await _context.Bills.Include(b => b.Company).Include(b => b.InvoiseLines).ToListAsync();
 
             return bills;
         }
 
-        public async Task<ActionResult<Bill>> GetBill(int id)
+        public async Task<Bill> GetBill(int id)
         {
-            if (_context.Bills == null)
-            {
-                return new NotFoundObjectResult(null);
-            }
-            var bill = await _context.Bills.FindAsync(id);
-
-            if (bill == null)
-            {
-                return new NotFoundObjectResult(null);
-            }
+            
+            var bill = await _context.Bills.Include(b => b.Company).Include(b => b.InvoiseLines).FirstOrDefaultAsync(b => b.Id == id);
 
             return bill;
         }
 
-        public async Task<IActionResult> UpdateBill(int id, Bill updatedBill)
+        public async Task UpdateBill(Bill bill)
         {
-            if (id != updatedBill.Id)
-            {
-                return new BadRequestResult();
-            }
+            var billItem = await _context.Bills.FirstOrDefaultAsync(x=> x.Id == bill.Id);
 
-            _context.Entry(updatedBill).State = EntityState.Modified;
-
-            try
+            if(billItem != null)
             {
+                billItem.BillNumber = bill.BillNumber;
+                billItem.Time = bill.Time;
+                billItem.Total = bill.Total;
+                billItem.InvoiseLines = bill.InvoiseLines;
+                billItem.Company = bill.Company;
+
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BillExists(id))
-                {
-                    return new NotFoundResult();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return new NoContentResult();
+            
         }
 
-        public async Task<Bill> CreateBill(BillCreationDTO billCreacion)
+        public async Task<Bill> CreateBill(Bill bill)
         {
             if (_context.Bills == null)
             {
-                throw new Exception("Entity set 'ApplicationDBContext.Users' is null.");
+                throw new Exception("Entity set 'ApplicationDBContext.Bills' is null.");
             }
 
-            var bill = _mapper.Map<Bill>(billCreacion);
             _context.Bills.Add(bill);
             await _context.SaveChangesAsync();
 
             return bill;
         }
 
-        public async Task<bool> DeleteBill(int id)
+        public async Task DeleteBill(Bill bill)
         {
-            var bill = await _context.Bills.FindAsync(id);
-            if (bill == null)
-            {
-                return false;
-            }
-
             _context.Bills.Remove(bill);
             await _context.SaveChangesAsync();
-
-            return true;
         }
 
         private bool BillExists(int id)

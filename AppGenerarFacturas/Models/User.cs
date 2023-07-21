@@ -7,6 +7,7 @@ namespace AppGenerarFacturas.Models
          public int Id { get; set; }
         [Required]
         public string Name { get; set; } = null!;
+        public bool EsAdministrador { get; set; }
         public string PasswordHash { get; set; } = string.Empty;
         public string RefreshToken { get; set; } = string.Empty;
         public DateTime TokenCreated { get; set; }
