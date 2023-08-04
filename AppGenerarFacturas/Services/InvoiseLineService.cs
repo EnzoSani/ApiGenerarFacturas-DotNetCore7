@@ -5,6 +5,7 @@ using AppGenerarFacturas.Services.contracts;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace AppGenerarFacturas.Services
 {
@@ -19,62 +20,38 @@ namespace AppGenerarFacturas.Services
             _mapper = mapper;
         }
 
-        public async Task<ActionResult<IEnumerable<InvoiseLine>>> getInvoiseLines()
+        public async Task<IEnumerable<InvoiseLine>> getInvoiseLines()
         {
-            var invoiseLine = await _context.InvoiseLines.ToListAsync();
+            var invoiseLines = await _context.InvoiseLines.ToListAsync();
 
-            if (invoiseLine == null)
-            {
-                return new NotFoundObjectResult(null);
-            }
-
-            return invoiseLine;
+            return invoiseLines;
         }
 
-        public async Task<ActionResult<InvoiseLine>> GetInvoiseLine(int id)
-        {
-            if (_context.InvoiseLines == null)
-            {
-                return new NotFoundObjectResult(null);
-            }
-            var invoiseLine = await _context.InvoiseLines.FindAsync(id);
+        public async Task<IEnumerable<InvoiseLine>> GetInvoiseLinesOfaBill(int id)
+        {        
+            var invoiseLines = await _context.InvoiseLines.Where(il => il.BillId == id).ToListAsync();
 
-            if (invoiseLine == null)
-            {
-                return new NotFoundObjectResult(null);
-            }
-
-            return invoiseLine;
+            return invoiseLines;
         }
 
-        public async Task<IActionResult> UpdateInvoiseLine(int id, InvoiseLine updatedInvosieLine)
+        public async Task UpdateInvoiceLine(InvoiseLine invoiseLine)
         {
-            if (id != updatedInvosieLine.Id)
-            {
-                return new BadRequestResult();
-            }
+            var invoiceLineItem = await _context.InvoiseLines.FirstOrDefaultAsync(x => x.Id == invoiseLine.Id);
 
-            _context.Entry(updatedInvosieLine).State = EntityState.Modified;
-
-            try
+            if (invoiceLineItem != null)
             {
+                invoiceLineItem.Description = invoiseLine.Description;
+                invoiceLineItem.Price = invoiseLine.Price;
+                invoiceLineItem.Amount = invoiseLine.Amount;
+                invoiceLineItem.Bill = invoiseLine.Bill;
+                invoiceLineItem.BillId = invoiseLine.BillId;
+
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!InvoiseLineExists(id))
-                {
-                    return new NotFoundResult();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return new NoContentResult();
+
         }
 
-        public async Task<InvoiseLine> CreateInvoiseLine(InvoiseLineCreationDTO invoiseLineCreacion)
+        public async Task<InvoiseLine> CreateInvoiseLine(InvoiseLineDTO invoiseLineCreacion)
         {
             if (_context.InvoiseLines == null)
             {
@@ -100,6 +77,24 @@ namespace AppGenerarFacturas.Services
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        //public async Task<InvoiseLine> GetInvoiseLinesOfaBill(int billId, int invoiceLineId)
+        //{
+        //    var bill = await _context.Bills.FindAsync(billId);
+
+        //    var invoiceLine = bill.InvoiseLines.FirstOrDefault(x => x.Id == invoiceLineId);
+
+        //    return invoiceLine;
+
+        //}
+
+        public async Task<InvoiseLine> GetInvoiceLine(int id)
+        {
+
+            var invoiceLine = await _context.InvoiseLines.FirstOrDefaultAsync(b => b.Id == id);
+
+            return invoiceLine;
         }
 
         private bool InvoiseLineExists(int id)

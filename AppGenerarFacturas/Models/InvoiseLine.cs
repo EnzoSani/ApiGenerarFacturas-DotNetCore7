@@ -10,6 +10,7 @@ namespace AppGenerarFacturas.Models
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public int Amount { get; set; }
+        public int BillId { get; set; }
         public Bill Bill { get; set; } = null!;
 
     }

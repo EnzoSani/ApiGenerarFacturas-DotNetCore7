@@ -5,31 +5,22 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace AppGenerarFacturas.Utilities
 {
-    public class BillProfile : Profile
+    public class AutoMapperProfile : Profile
     {
-        
-        public BillProfile()
+
+        public AutoMapperProfile()
         {
-            
-            //// Mapeo de Factura a BillDTO
-            CreateMap<Bill,BillDTO>();
-            
-
-            //// Mapeo de BillDTO a Bill
+            // Mapeo de Factura a BillDTO
+            CreateMap<Bill, BillDTO>();
             CreateMap<BillDTO, Bill>();
-            
 
-            //// Mapeo de LineaFactura a InvoiseLineDTO
+            // Mapeo de LineaFactura a InvoiseLineDTO
             CreateMap<InvoiseLine, InvoiseLineDTO>();
             CreateMap<InvoiseLineDTO, InvoiseLine>();
-            
 
-            //// Mapeo de Empresa a CompanyDTO
+            // Mapeo de Empresa a CompanyDTO
             CreateMap<Company, CompanyDTO>();
             CreateMap<CompanyDTO, Company>();
-            
-
-            
         }
     }
 }
